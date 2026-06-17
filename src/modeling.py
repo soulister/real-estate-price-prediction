@@ -9,7 +9,7 @@ sys.path.append(str(PROJECT_ROOT))
 from src.preprocessing import *
 from src.data_split import *
 from src.metrics import *
-from src.modeling import *
+
 
 def run_boosting_cv(
     train_df,

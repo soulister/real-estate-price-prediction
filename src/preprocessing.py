@@ -6,7 +6,7 @@ def timestamp_prep(df: pd.DataFrame):
         df['timestamp'] = pd.to_datetime(df['timestamp'])
         df['year'] = df['timestamp'].dt.year
         df['month'] = df['timestamp'].dt.month
-        df['day'] = df['timestamp'].dt.year
+        df['day'] = df['timestamp'].dt.day
         df = df.drop('timestamp', axis=1)
     if 'time_block' in df.columns:
         df = df.drop('time_block', axis=1)
@@ -41,7 +41,6 @@ def anomalies_deleting(df: pd.DataFrame):
     df_cleaned.loc[df_cleaned['max_floor'] < df_cleaned['floor'], ['max_floor', 'floor']] = np.nan
     df_cleaned.loc[df_cleaned['life_sq'] > df_cleaned['full_sq'], ['life_sq', 'full_sq']] = np.nan
     df_cleaned.loc[df_cleaned['kitch_sq'] > df_cleaned['full_sq'], ['kitch_sq', 'full_sq']] = np.nan
-    df_cleaned.loc[df_cleaned['kitch_sq'] > df_cleaned['life_sq'], ['kitch_sq', 'life_sq']] = np.nan
     df_cleaned.loc[df_cleaned['kitch_sq'] > df_cleaned['life_sq'], ['kitch_sq', 'life_sq']] = np.nan
     df_cleaned.loc[(df_cleaned['build_year'] > 2015) | (df_cleaned['build_year'] < 1800), ['build_year']] = np.nan
     df_cleaned.loc[(df_cleaned['full_sq'] > 1000) | (df_cleaned['full_sq'] < 10), ['full_sq']] = np.nan
