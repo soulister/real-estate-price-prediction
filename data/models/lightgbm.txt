@@ -31457,7 +31457,7 @@ parameters:
 [cegb_penalty_feature_coupled: ]
 [path_smooth: 0]
 [interaction_constraints: ]
-[verbosity: 200]
+[verbosity: 1]
 [saved_feature_importance_type: 0]
 [use_quantized_grad: 0]
 [num_grad_quant_bins: 4]

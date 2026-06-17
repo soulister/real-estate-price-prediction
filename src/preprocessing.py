@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+import json
+from pathlib import Path
 
 def timestamp_prep(df: pd.DataFrame):
     if 'timestamp' in df.columns:
@@ -57,25 +59,73 @@ def log_target(df: pd.DataFrame, target = 'price_doc'):
 
     return df
 
-def cat_features_encoding(df: pd.DataFrame):
-    cat_features = df.select_dtypes(include=['object', 'datetime'])
-    for i in cat_features:
-        df[i] = df[i].astype('category')
+def fit_cat_categories(df: pd.DataFrame) -> dict:
+    cat_cols = df.select_dtypes(include=['object', 'datetime', 'category']).columns
+    categories = {}
+    for col in cat_cols:
+        if df[col].dtype.name == 'category':
+            categories[col] = df[col].cat.categories
+        else:
+            categories[col] = df[col].astype('category').cat.categories
+    return categories
+
+
+def cat_features_encoding(
+    df: pd.DataFrame,
+    cat_categories: dict | None = None,
+):
+    cat_cols = df.select_dtypes(include=['object', 'datetime']).columns
+    for col in cat_cols:
+        if cat_categories is None:
+            df[col] = df[col].astype('category')
+        else:
+            df[col] = pd.Categorical(df[col], categories=cat_categories[col])
     return df
 
-def base_preprocessing(df: pd.DataFrame):
+
+def preprocess_train_val(train: pd.DataFrame, val: pd.DataFrame, with_features_eng: bool):
+    train = anomalies_deleting(train)
+    val = anomalies_deleting(val)
+    train = timestamp_prep(train)
+    val = timestamp_prep(val)
+    train = log_target(train)
+    val = log_target(val)
+    if with_features_eng:
+        train = features_engennering(train)
+        val = features_engennering(val)
+    cat_categories = fit_cat_categories(train)
+    train = cat_features_encoding(train)
+    val = cat_features_encoding(val, cat_categories)
+    return train, val
+
+
+def base_preprocessing(df: pd.DataFrame, cat_categories: dict | None = None):
     df = anomalies_deleting(df=df)
     df = timestamp_prep(df=df)
     df = log_target(df=df)
-    df = cat_features_encoding(df=df)
+    df = cat_features_encoding(df=df, cat_categories=cat_categories)
 
     return df
 
-def prep_with_features_eng(df: pd.DataFrame):
+def prep_with_features_eng(df: pd.DataFrame, cat_categories: dict | None = None):
     df = anomalies_deleting(df=df)
     df = timestamp_prep(df=df)
     df = log_target(df=df)
     df = features_engennering(df=df)
-    df = cat_features_encoding(df=df)
+    df = cat_features_encoding(df=df, cat_categories=cat_categories)
     return df
-    
+
+
+def save_cat_categories(categories: dict, path: str | Path) -> None:
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    serializable = {col: categories[col].tolist() for col in categories}
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(serializable, f, indent=4)
+
+
+def load_cat_categories(path: str | Path) -> dict:
+    with open(path, encoding="utf-8") as f:
+        data = json.load(f)
+    return {col: pd.Index(values) for col, values in data.items()}
+

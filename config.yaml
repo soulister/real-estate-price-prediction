@@ -1,0 +1,36 @@
+# Режим: predict | retrain | retune
+mode: retrain
+
+paths:
+  train: data/Raw_data/train.csv
+  test: data/Raw_data/test.csv
+  macro: data/Raw_data/macro.csv
+  features: data/features/features_100.json
+  train_full: data/train_test/holdout/train_full.csv
+  holdout: data/train_test/holdout/holdout.csv
+  params:
+    xgb: data/best_params/xgb_params.json
+    lgb: data/best_params/lgb_params.json
+    cat: data/best_params/cat_params.json
+    alpha: data/best_params/alpha_staking.json
+  models:
+    xgb: data/models/xgboost.json
+    lgb: data/models/lightgbm.txt
+    cat: data/models/catboost.cbm
+    meta: data/models/meta_model.pkl
+  oof_stacking: data/journals/oof_stacking.csv
+  submissions_dir: data/submissions
+  preprocessing:
+    cat_categories: data/models/preprocessing/cat_categories.json
+
+retune:
+  n_trials: 50
+  seed: 456
+
+training:
+  submission_name: staking_3_models.csv
+  rebuild_oof_on_retrain: true
+  verbose: 200
+
+preprocessing:
+  with_features_eng: true
