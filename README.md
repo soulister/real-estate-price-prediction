@@ -227,7 +227,6 @@ pip install -r requirements.txt
 |---|---|
 | **Файл отчёта** | `reports/geo_visual.pbix` |
 | **Исходные данные** | Полный `train.csv` (все сделки обучающей выборки) |
-| **Текущее расположение** | `C:\Users\sokol\Documents\geo_visual.pbix` |
 
 > Рекомендуется скопировать `.pbix` файл в `reports/geo_visual.pbix` для хранения рядом с кодом проекта.
 
