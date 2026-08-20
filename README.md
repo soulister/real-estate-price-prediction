@@ -1,3 +1,8 @@
+> **Просмотр ноутбуков:** чтобы корректно открыть Jupyter-ноутбуки из репозитория, замените в URL `github.com` на `nbviewer.org/github`.  
+
+> Пример: `https://nbviewer.org/github/soulister/Churn-prediction/blob/main/notebooks/final_result.ipynb`
+
+
 # Прогнозирование стоимости недвижимости на рынке Москвы
 
 End-to-end ML-проект по оценке рыночной стоимости квартир на основе данных конкурса [Sberbank Russian Housing Market](https://www.kaggle.com/competitions/sberbank-russian-housing-market) (Kaggle). Решение включает исследовательский анализ, feature engineering, гиперпараметрический тюнинг градиентных бустингов, stacking ансамбль и production-like pipeline для инференса.
